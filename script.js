@@ -13,7 +13,11 @@ let currentSelection = {};
 let dragSourceIndex = null;
 let urlStatusCache = {};
 
-const ADMIN_PASSWORD = "admin123";
+// ========== POLLING & DEVICE ==========
+let pollingInterval = null;
+let lastProductsString = '';
+
+const ADMIN_PASSWORD = "a123123";
 const GIS_URL = 'https://gist.githubusercontent.com/Datkep92/6149152b2e5b323ae6217e20c3f2dd53/raw/zalocash';
 
 // ========== HELPER FUNCTIONS ==========
@@ -34,6 +38,81 @@ function showToast(message, isError = false) {
     setTimeout(() => toast.classList.remove('show'), 2000);
 }
 
+// ========== DEVICE ID & AUTO LOGIN ==========
+function getDeviceId() {
+    let deviceId = localStorage.getItem('device_id');
+    if (!deviceId) {
+        deviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8);
+        localStorage.setItem('device_id', deviceId);
+    }
+    return deviceId;
+}
+
+function savePasswordForDevice(password) {
+    const deviceId = getDeviceId();
+    const encrypted = btoa(password);
+    localStorage.setItem(`admin_pwd_${deviceId}`, encrypted);
+}
+
+function clearSavedPassword() {
+    const deviceId = getDeviceId();
+    localStorage.removeItem(`admin_pwd_${deviceId}`);
+    showToast('✅ Đã xóa mật khẩu đã lưu');
+}
+
+function autoLoginWithDevice() {
+    const deviceId = getDeviceId();
+    const savedPwd = localStorage.getItem(`admin_pwd_${deviceId}`);
+    
+    if (savedPwd) {
+        const password = atob(savedPwd);
+        if (password === ADMIN_PASSWORD) {
+            document.getElementById('userView').style.display = 'none';
+            document.getElementById('adminView').style.display = 'block';
+            loadAdminData();
+            return true;
+        }
+    }
+    return false;
+}
+
+// ========== POLLING ==========
+async function pollForUpdates() {
+    try {
+        const response = await fetch(GIS_URL + '?t=' + Date.now());
+        if (!response.ok) throw new Error('Polling failed');
+        const data = await response.json();
+        const newProducts = data.products || [];
+        const newString = JSON.stringify(newProducts);
+        
+        if (newString !== lastProductsString) {
+            products = newProducts;
+            lastProductsString = newString;
+            localStorage.setItem('products_backup', JSON.stringify(products));
+            renderUserGrid();
+            showToast('🔄 Danh sách sản phẩm đã được cập nhật');
+            
+            if (document.getElementById('adminView').style.display === 'block') {
+                loadProductList();
+            }
+        }
+    } catch (error) {
+        console.error('Polling error:', error);
+    }
+}
+
+function startPolling(intervalMs = 30000) {
+    if (pollingInterval) clearInterval(pollingInterval);
+    pollingInterval = setInterval(pollForUpdates, intervalMs);
+}
+
+function stopPolling() {
+    if (pollingInterval) {
+        clearInterval(pollingInterval);
+        pollingInterval = null;
+    }
+}
+
 // ========== LOAD DỮ LIỆU TỪ GIS ==========
 async function loadProductsFromGIS() {
     try {
@@ -41,12 +120,14 @@ async function loadProductsFromGIS() {
         if (!response.ok) throw new Error('Không thể tải');
         const data = await response.json();
         products = data.products || [];
+        lastProductsString = JSON.stringify(products);
         localStorage.setItem('products_backup', JSON.stringify(products));
     } catch (error) {
         console.error('Lỗi tải GIS:', error);
         const backup = localStorage.getItem('products_backup');
         if (backup) {
             products = JSON.parse(backup);
+            lastProductsString = JSON.stringify(products);
         } else {
             products = [{
                 name: "CayVang",
@@ -60,6 +141,7 @@ async function loadProductsFromGIS() {
                 age: "20-60",
                 promotion: "Khuyến mãi"
             }];
+            lastProductsString = JSON.stringify(products);
         }
     }
     renderUserGrid();
@@ -111,35 +193,6 @@ function closeLogin() {
     document.getElementById('loginModal').style.display = 'none';
 }
 
-function checkLogin() {
-    const pwd = document.getElementById('adminPassword').value;
-    if (pwd === ADMIN_PASSWORD) {
-        closeLogin();
-        document.getElementById('userView').style.display = 'none';
-        document.getElementById('adminView').style.display = 'block';
-        loadAdminData();
-    } else {
-        document.getElementById('loginError').style.display = 'block';
-    }
-}
-
-function logout() {
-    document.getElementById('adminView').style.display = 'none';
-    document.getElementById('userView').style.display = 'block';
-    document.getElementById('adminPassword').value = '';
-    document.getElementById('loginError').style.display = 'none';
-}
-
-// ========== LOAD ADMIN DATA ==========
-function loadAdminData() {
-    loadSettings();
-    loadPresets();
-    loadProductList();
-    initSelection();
-    renderAllPresetBtns();
-    updateAdminStatus();
-}
-
 function loadSettings() {
     const saved = localStorage.getItem('admin_settings');
     if (saved) settings = JSON.parse(saved);
@@ -155,7 +208,7 @@ function saveSettings() {
         fileName: getElement('fileName').value
     };
     localStorage.setItem('admin_settings', JSON.stringify(settings));
-    alert('✅ Đã lưu cài đặt');
+    showToast('✅ Đã lưu cài đặt');
     updateAdminStatus();
 }
 
@@ -164,11 +217,8 @@ function updateAdminStatus() {
     if (getElement('gistStatus')) getElement('gistStatus').innerHTML = settings.apiUrl ? '✅ Đã cài' : '❌ Chưa cài';
 }
 
-// ========== KIỂM TRA URL (CHẠY SONG SONG, KHÔNG VÒNG LẶP CHỜ) ==========
-
-// Hàm kiểm tra 1 URL
+// ========== KIỂM TRA URL ==========
 async function checkUrlDetails(url) {
-    // Kiểm tra cache trước
     if (urlStatusCache[url] && Date.now() - urlStatusCache[url].timestamp < 300000) {
         return urlStatusCache[url].data;
     }
@@ -243,34 +293,27 @@ async function checkUrlDetails(url) {
     }
 }
 
-// Hàm kiểm tra TẤT CẢ URL - CHẠY SONG SONG (không vòng lặp chờ)
 async function checkAllUrls() {
     if (products.length === 0) return;
     
     showToast('🔄 Đang kiểm tra ' + products.length + ' link...');
     
-    // Tạo mảng các promise chạy song song
     const checkPromises = products.map(async (product) => {
         const result = await checkUrlDetails(product.link);
         product._urlStatus = result;
         return result;
     });
     
-    // Chờ tất cả hoàn thành (chạy đồng thời)
     await Promise.all(checkPromises);
-    
-    // Cập nhật UI một lần sau khi tất cả hoàn thành
     loadProductList();
     showToast('✅ Đã kiểm tra xong ' + products.length + ' link!');
 }
 
-// Hàm kiểm tra lại toàn bộ (xóa cache)
 function recheckAllLinks() {
     urlStatusCache = {};
     checkAllUrls();
 }
 
-// Hàm kiểm tra link cho 1 sản phẩm cụ thể (cập nhật UI ngay)
 async function checkSingleUrl(index) {
     const product = products[index];
     if (!product) return;
@@ -278,7 +321,6 @@ async function checkSingleUrl(index) {
     const result = await checkUrlDetails(product.link);
     product._urlStatus = result;
     
-    // Cập nhật UI cho card đó (không reload toàn bộ)
     const card = document.querySelector(`.grid-item[data-index="${index}"]`);
     if (card) {
         const statusDiv = card.querySelector('.url-status');
@@ -307,15 +349,7 @@ async function checkSingleUrl(index) {
     }
 }
 
-
-
-function recheckAllLinks() {
-    urlStatusCache = {};
-    checkAllUrls();
-    showToast('🔄 Đang kiểm tra lại tất cả link...');
-}
-
-// ========== RENDER PRODUCT GRID (HÀM CHÍNH) ==========
+// ========== RENDER PRODUCT GRID ==========
 function loadProductList() {
     const grid = getElement('productGrid');
     const count = getElement('productCount');
@@ -394,9 +428,6 @@ function loadProductList() {
             </div>
         </div>`;
     }).join('');
-    
-    // Không tự động gọi checkAllUrls ở đây nữa
-// Việc kiểm tra sẽ được gọi riêng
 }
 
 // ========== DRAG & DROP ==========
@@ -432,10 +463,7 @@ async function onDrop(event, targetIndex) {
     products.splice(dragSourceIndex, 1);
     products.splice(targetIndex, 0, movedProduct);
     
-    localStorage.setItem('products_backup', JSON.stringify(products));
-    loadProductList();
-    renderUserGrid();
-    await updateGist();
+    saveAndRefresh();
     showToast('✅ Đã di chuyển và cập nhật Gist!');
     onDragEnd(event);
 }
@@ -517,6 +545,8 @@ function resetForm() {
 }
 
 function saveAndRefresh() {
+    const newString = JSON.stringify(products);
+    lastProductsString = newString;
     localStorage.setItem('products_backup', JSON.stringify(products));
     loadProductList();
     renderUserGrid();
@@ -566,7 +596,7 @@ function renderPresetBtns(containerId, arr, type, fmt = null) {
     
     container.innerHTML = arr.map((p, i) => {
         const isSelected = currentSelection[type] === p || (type === 'amount' && currentSelection.amount?.value === p.value);
-        return `<button class="btn-preset ${isSelected ? 'selected' : ''}" onclick="selectPreset('${type}', ${i})">${fmt ? fmt(p) : p}</button>`;
+        return `<button type="button" class="btn-preset ${isSelected ? 'selected' : ''}" onclick="selectPreset('${type}', ${i})">${fmt ? fmt(p) : p}</button>`;
     }).join('');
 }
 
@@ -633,7 +663,7 @@ function savePresets() {
     localStorage.setItem('admin_presets', JSON.stringify(presets));
     renderAllPresetBtns();
     closePresetManager();
-    alert('✅ Đã lưu mẫu!');
+    showToast('✅ Đã lưu mẫu!');
 }
 
 function addAmountPreset() { presets.amounts.push({ value: "Mới", unit: "Triệu" }); renderPresetLists(); }
@@ -679,8 +709,12 @@ async function updateGist() {
                 }
             })
         });
+        
+        lastProductsString = JSON.stringify(cleanProducts);
+        showToast('✅ Đã push lên Gist');
     } catch (error) {
         console.error('Lỗi update Gist:', error);
+        showToast('❌ Lỗi push lên Gist', true);
     }
 }
 
@@ -694,7 +728,7 @@ async function syncFromGist() {
     }
 }
 
-async function loadFromGist() {
+async function loadFromGist(showAlert = false) {
     try {
         const gistId = extractGistId(settings.apiUrl);
         const response = await fetch(`https://api.github.com/gists/${gistId}`, {
@@ -707,14 +741,16 @@ async function loadFromGist() {
         const content = data.files[settings.fileName]?.content;
         
         if (content) {
-            products = JSON.parse(content).products || [];
+            const parsed = JSON.parse(content);
+            products = parsed.products || [];
+            lastProductsString = JSON.stringify(products);
             localStorage.setItem('products_backup', JSON.stringify(products));
             loadProductList();
             renderUserGrid();
-            alert(`✅ Đã đồng bộ ${products.length} sản phẩm!`);
+            if (showAlert) alert(`✅ Đã đồng bộ ${products.length} sản phẩm!`);
         }
     } catch (error) {
-        alert('❌ Lỗi: ' + error.message);
+        if (showAlert) alert('❌ Lỗi: ' + error.message);
     }
 }
 
@@ -735,36 +771,42 @@ async function testConnection() {
     }
 }
 
-// ========== FILTER & SORT ==========
-function filterProducts() {
-    const searchTerm = getElement('productSearch')?.value.toLowerCase() || '';
-    document.querySelectorAll('.grid-item').forEach((item, i) => {
-        item.style.display = products[i]?.name.toLowerCase().includes(searchTerm) ? 'block' : 'none';
-    });
-}
-
-function sortProducts() {
-    const sortBy = getElement('sortProducts')?.value || 'name';
-    
-    switch (sortBy) {
-        case 'name':
-            products.sort((a, b) => a.name.localeCompare(b.name));
-            break;
-        case 'name-desc':
-            products.sort((a, b) => b.name.localeCompare(a.name));
-            break;
-        case 'amount':
-            products.sort((a, b) => parseFloat(a.amount) - parseFloat(b.amount));
-            break;
-    }
-    
-    localStorage.setItem('products_backup', JSON.stringify(products));
+// ========== QUẢN LÝ ADMIN ==========
+function loadAdminData() {
+    loadSettings();
+    loadPresets();
     loadProductList();
-    renderUserGrid();
-    updateGist();
+    initSelection();
+    renderAllPresetBtns();
+    updateAdminStatus();
+    setTimeout(() => checkAllUrls(), 500);
 }
 
-// ========== TAB ADMIN ==========
+function logout() {
+    stopPolling();
+    document.getElementById('adminView').style.display = 'none';
+    document.getElementById('userView').style.display = 'block';
+    document.getElementById('adminPassword').value = '';
+    document.getElementById('loginError').style.display = 'none';
+    showToast('✅ Đã đăng xuất');
+    loadProductsFromGIS();
+}
+
+function checkLogin() {
+    const pwd = document.getElementById('adminPassword').value;
+    
+    if (pwd === ADMIN_PASSWORD) {
+        savePasswordForDevice(pwd);
+        closeLogin();
+        document.getElementById('userView').style.display = 'none';
+        document.getElementById('adminView').style.display = 'block';
+        loadAdminData();
+    } else {
+        document.getElementById('loginError').style.display = 'block';
+    }
+}
+
+// ========== EVENTS & INITIALIZE ==========
 document.querySelectorAll('.admin-tab').forEach(tab => {
     tab.addEventListener('click', () => {
         document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
@@ -777,16 +819,16 @@ document.querySelectorAll('.admin-tab').forEach(tab => {
 document.getElementById('loginModal').addEventListener('click', (e) => {
     if (e.target === document.getElementById('loginModal')) closeLogin();
 });
-function loadAdminData() {
-    loadSettings();
-    loadPresets();
-    loadProductList();
-    initSelection();
-    renderAllPresetBtns();
-    updateAdminStatus();
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const autoLoggedIn = autoLoginWithDevice();
     
-    // Tự động kiểm tra link sau khi load (chạy ngầm, không ảnh hưởng UI)
-    setTimeout(() => checkAllUrls(), 500);
-}
-// ========== INITIALIZE ==========
-loadProductsFromGIS();
+    // LUÔN tải dữ liệu mới từ Gist, bất kể đã login hay chưa
+    await loadProductsFromGIS();
+    
+    // Sau đó mới khởi động polling
+    startPolling(30000);
+    
+    // Nếu chưa login thì user view đang hiển thị, không cần làm gì thêm
+    // Nếu đã login thì autoLoginWithDevice đã chuyển sang admin view rồi
+});

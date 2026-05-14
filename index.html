@@ -3,55 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>YoCash - Vay Nhanh CCCD + Admin GIS</title>
+    
+    <title>YoCash - Vay Tiền Nhanh Online Chỉ Cần CCCD | Lãi Suất 0%</title>
+    <meta name="description" content="YoCash - Vay tiền nhanh online 24/7, chỉ cần CCCD, giải ngân trong 15 phút. Lãi suất ưu đãi 0% cho khoản vay đầu tiên. Đăng ký ngay!">
+    <meta name="keywords" content="vay tiền nhanh, vay online, vay cccd, vay không thế chấp, YoCash, vay tiền online, vay nhanh, tài chính cá nhân">
+    <meta name="author" content="YoCash">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="Vietnamese">
+    <meta name="revisit-after" content="1 days">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://your-domain.com/">
+    <meta property="og:title" content="YoCash - Vay Tiền Nhanh Online Chỉ Cần CCCD">
+    <meta property="og:description" content="Vay tiền nhanh online 24/7, chỉ cần CCCD, giải ngân trong 15 phút. Lãi suất 0% cho khoản vay đầu.">
+    <meta property="og:image" content="https://your-domain.com/og-image.jpg">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="YoCash - Vay Tiền Nhanh Online">
+    <meta name="twitter:description" content="Vay tiền nhanh online 24/7, chỉ cần CCCD, giải ngân trong 15 phút.">
+    
+    <link rel="canonical" href="https://your-domain.com/">
+    
+    <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://gist.githubusercontent.com">
+    
     <link rel="stylesheet" href="style.css">
+    
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FinancialProduct",
+        "name": "YoCash",
+        "description": "Dịch vụ vay tiền online nhanh chóng, chỉ cần CCCD, giải ngân trong ngày",
+        "provider": {
+            "@type": "Organization",
+            "name": "YoCash",
+            "url": "https://your-domain.com",
+            "logo": "https://your-domain.com/logo.png"
+        },
+        "annualPercentageRate": "0% - 20%",
+        "feesAndCommissionsSpecification": "Miễn phí hồ sơ, lãi suất ưu đãi",
+        "eligibleDuration": "3-24 tháng"
+    }
+    </script>
 </head>
 <body>
 
-<!-- GIAO DIỆN NGƯỜI DÙNG -->
 <div id="userView">
-    <div class="user-header">
-        <h1>⚡ YOCASH</h1>
-        <p>Vay nhanh - Chỉ cần CCCD - Giải ngân trong ngày</p>
-    </div>
-    <div class="user-nav">
-        <button onclick="scrollToProducts()">📱 Xem gói vay</button>
-        <button onclick="showLogin()">🔐 Admin</button>
-    </div>
-    <div class="user-intro">
+    <header class="user-header">
+        <h1>⚡ YOCASH - Vay Tiền Nhanh Online</h1>
+        <p>Chỉ cần CCCD - Giải ngân trong 15 phút - Lãi suất 0%</p>
+    </header>
+    
+    <nav class="user-nav" aria-label="Điều hướng chính">
+        <button onclick="scrollToProducts()" aria-label="Xem danh sách gói vay">📱 Xem gói vay</button>
+        <button onclick="showLogin()" aria-label="Đăng nhập quản trị">🔐 Admin</button>
+    </nav>
+    
+    <section class="user-intro" aria-label="Giới thiệu dịch vụ">
         <p>📄 Ưu đãi đặc biệt - Lãi suất 0% cho khoản vay đầu tiên</p>
-        <p>✅ Chỉ cần CCCD gắn chip hoặc CMND còn hạn</p>
-    </div>
-    <div id="userGrid" class="user-grid">
-        <div style="text-align:center;padding:40px;grid-column:1/-1;">⏳ Đang tải sản phẩm...</div>
-    </div>
+        <p>✅ Chỉ cần CCCD gắn chip là giải ngân ngay</p>
+        <p>⏰ Hỗ trợ 24/7 - Giải ngân trong 15 phút</p>
+    </section>
+    
+    <section id="products-section" aria-label="Danh sách các gói vay">
+        <div id="userGrid" class="user-grid">
+            <div style="text-align:center;padding:40px;grid-column:1/-1;">⏳ Đang tải sản phẩm...</div>
+        </div>
+    </section>
+    
+    <footer class="user-footer">
+        <div class="footer-content">
+            <div class="footer-info">
+                <h3>📞 Thông tin liên hệ</h3>
+                <p>Hotline: <a href="tel:19000000">1900 1509</a></p>
+                <p>Email: <a href="mailto:hotro@yocash.vn">hotro@yocash.vn</a></p>
+                <p>© 2024 YoCash - Giải pháp tài chính thông minh</p>
+            </div>
+            <div class="footer-links">
+                <h3>🔗 Chính sách</h3>
+                <a href="#">Điều khoản sử dụng</a>
+                <a href="#">Chính sách bảo mật</a>
+                <a href="#">Quy chế hoạt động</a>
+            </div>
+            <div class="footer-note">
+                <p class="warning">⚠️ Vay có trách nhiệm - Thanh toán đúng hạn để bảo vệ lịch sử tín dụng</p>
+            </div>
+        </div>
+    </footer>
 </div>
 
-<!-- GIAO DIỆN ADMIN -->
 <div id="adminView" class="admin-panel">
     <div class="admin-header">
-        <h2>⚙️ ADMIN GIS - Quản lý sản phẩm</h2>
-        <button class="logout-btn" onclick="logout()">🚪 Thoát</button>
+    <h2>⚙️ ADMIN GIS - Quản lý sản phẩm</h2>
+    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+        <button class="logout-btn" style="background:#6c757d;" onclick="clearSavedPassword()" aria-label="Xóa mật khẩu">🗑️ Xóa pass</button>
+        <button class="logout-btn" onclick="logout()" aria-label="Đăng xuất">🚪 Thoát</button>
+    </div>
+</div>
+    
+    <div class="admin-tabs" role="tablist">
+        <button class="admin-tab active" data-tab="setup" role="tab" aria-selected="true">🔧 Cài đặt</button>
+        <button class="admin-tab" data-tab="add" role="tab" aria-selected="false">➕ Thêm SP</button>
+        <button class="admin-tab" data-tab="manage" role="tab" aria-selected="false">📦 Quản lý</button>
     </div>
     
-    <div class="admin-tabs">
-        <button class="admin-tab active" data-tab="setup">🔧 Cài đặt</button>
-        <button class="admin-tab" data-tab="add">➕ Thêm SP</button>
-        <button class="admin-tab" data-tab="manage">📦 Quản lý</button>
-    </div>
-    
-    <!-- Tab Cài đặt -->
-    <div id="setupTab" class="admin-tab-content active">
+    <div id="setupTab" class="admin-tab-content active" role="tabpanel">
         <div class="form-group">
-            <label>🌐 API URL (Gist)</label>
+            <label for="apiUrl">🌐 API URL (Gist)</label>
             <input type="url" id="apiUrl" placeholder="https://api.github.com/gists/...">
         </div>
         <div class="form-group">
-            <label>🔑 GitHub Token</label>
+            <label for="githubToken">🔑 GitHub Token</label>
             <input type="password" id="githubToken" placeholder="ghp_...">
         </div>
         <div class="form-group">
-            <label>📁 Tên file</label>
+            <label for="fileName">📁 Tên file</label>
             <input type="text" id="fileName" value="zalocash">
         </div>
         <div class="action-buttons">
@@ -65,21 +134,20 @@
         </div>
     </div>
     
-    <!-- Tab Thêm sản phẩm -->
-    <div id="addTab" class="admin-tab-content">
+    <div id="addTab" class="admin-tab-content" role="tabpanel">
         <form id="productForm">
             <input type="hidden" id="editIndex" value="">
             <div class="mobile-form">
                 <div class="mobile-form-group">
-                    <label class="mobile-label">🏷️ Tên SP</label>
+                    <label class="mobile-label" for="name">🏷️ Tên SP</label>
                     <input type="text" id="name" class="mobile-input" required placeholder="VD: CayVang">
                 </div>
                 <div class="mobile-form-group">
-                    <label class="mobile-label">🖼️ URL ảnh</label>
+                    <label class="mobile-label" for="image">🖼️ URL ảnh</label>
                     <input type="url" id="image" class="mobile-input" required placeholder="https://...">
                 </div>
                 <div class="mobile-form-group">
-                    <label class="mobile-label">🔗 Link SP</label>
+                    <label class="mobile-label" for="link">🔗 Link SP</label>
                     <input type="url" id="link" class="mobile-input" required placeholder="https://...">
                 </div>
             </div>
@@ -125,19 +193,10 @@
         </div>
     </div>
     
-    <!-- Tab Quản lý -->
-    <div id="manageTab" class="admin-tab-content">
+    <div id="manageTab" class="admin-tab-content" role="tabpanel">
         <div class="manage-header">
             <div class="section-title">📦 Danh sách sản phẩm (<span id="productCount">0</span>)</div>
             <button class="btn btn-primary btn-sm" onclick="recheckAllLinks()">🔄 Kiểm tra link</button>
-        </div>
-        <div class="product-controls">
-            <input type="text" id="productSearch" placeholder="🔍 Tìm sản phẩm..." onkeyup="filterProducts()">
-            <select id="sortProducts" onchange="sortProducts()">
-                <option value="name">Sắp xếp: Tên A-Z</option>
-                <option value="name-desc">Sắp xếp: Tên Z-A</option>
-                <option value="amount">Sắp xếp: Số tiền</option>
-            </select>
         </div>
         <div id="productGrid" class="admin-grid"></div>
         <div class="empty-state" id="emptyState" style="display:none;">
@@ -148,12 +207,11 @@
     </div>
 </div>
 
-<!-- MODAL QUẢN LÝ MẪU -->
-<div id="presetModal" class="modal">
+<div id="presetModal" class="modal" role="dialog" aria-modal="true">
     <div class="modal-content">
         <div class="modal-header">
             <h3>⚙️ Quản lý mẫu nhanh</h3>
-            <button class="close" onclick="closePresetManager()">×</button>
+            <button class="close" onclick="closePresetManager()" aria-label="Đóng">×</button>
         </div>
         <div class="preset-section">
             <h4>💰 Mẫu số tiền</h4>
@@ -192,11 +250,13 @@
     </div>
 </div>
 
-<!-- MODAL ĐĂNG NHẬP -->
-<div id="loginModal" class="login-overlay">
+<div id="loginModal" class="login-overlay" role="dialog" aria-modal="true">
     <div class="login-box">
         <h3>🔐 Đăng nhập Admin</h3>
-        <input type="password" id="adminPassword" placeholder="Nhập mật khẩu">
+        <input type="password" id="adminPassword" placeholder="Nhập mật khẩu" aria-label="Mật khẩu admin">
+        
+        
+        
         <button onclick="checkLogin()">Đăng nhập</button>
         <div id="loginError" class="login-error">❌ Sai mật khẩu!</div>
     </div>
