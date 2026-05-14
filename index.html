@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>YoCash - Vay Nhanh CCCD + Admin GIS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- GIAO DIỆN NGƯỜI DÙNG -->
+<div id="userView">
+    <div class="user-header">
+        <h1>⚡ YOCASH</h1>
+        <p>Vay nhanh - Chỉ cần CCCD - Giải ngân trong ngày</p>
+    </div>
+    <div class="user-nav">
+        <button onclick="scrollToProducts()">📱 Xem gói vay</button>
+        <button onclick="showLogin()">🔐 Admin</button>
+    </div>
+    <div class="user-intro">
+        <p>📄 Ưu đãi đặc biệt - Lãi suất 0% cho khoản vay đầu tiên</p>
+        <p>✅ Chỉ cần CCCD gắn chip hoặc CMND còn hạn</p>
+    </div>
+    <div id="userGrid" class="user-grid">
+        <div style="text-align:center;padding:40px;grid-column:1/-1;">⏳ Đang tải sản phẩm...</div>
+    </div>
+</div>
+
+<!-- GIAO DIỆN ADMIN -->
+<div id="adminView" class="admin-panel">
+    <div class="admin-header">
+        <h2>⚙️ ADMIN GIS - Quản lý sản phẩm</h2>
+        <button class="logout-btn" onclick="logout()">🚪 Thoát</button>
+    </div>
+    
+    <div class="admin-tabs">
+        <button class="admin-tab active" data-tab="setup">🔧 Cài đặt</button>
+        <button class="admin-tab" data-tab="add">➕ Thêm SP</button>
+        <button class="admin-tab" data-tab="manage">📦 Quản lý</button>
+    </div>
+    
+    <!-- Tab Cài đặt -->
+    <div id="setupTab" class="admin-tab-content active">
+        <div class="form-group">
+            <label>🌐 API URL (Gist)</label>
+            <input type="url" id="apiUrl" placeholder="https://api.github.com/gists/...">
+        </div>
+        <div class="form-group">
+            <label>🔑 GitHub Token</label>
+            <input type="password" id="githubToken" placeholder="ghp_...">
+        </div>
+        <div class="form-group">
+            <label>📁 Tên file</label>
+            <input type="text" id="fileName" value="zalocash">
+        </div>
+        <div class="action-buttons">
+            <button class="btn btn-success" onclick="saveSettings()">💾 Lưu cài đặt</button>
+            <button class="btn btn-primary" onclick="testConnection()">🔍 Kiểm tra Gist</button>
+            <button class="btn btn-warning" onclick="syncFromGist()">📥 Đồng bộ từ Gist</button>
+        </div>
+        <div class="api-status">
+            <div class="status-item"><span>📦 Tổng sản phẩm:</span><span id="totalProducts">0</span></div>
+            <div class="status-item"><span>🌐 Trạng thái Gist:</span><span id="gistStatus">❌ Chưa kết nối</span></div>
+        </div>
+    </div>
+    
+    <!-- Tab Thêm sản phẩm -->
+    <div id="addTab" class="admin-tab-content">
+        <form id="productForm">
+            <input type="hidden" id="editIndex" value="">
+            <div class="mobile-form">
+                <div class="mobile-form-group">
+                    <label class="mobile-label">🏷️ Tên SP</label>
+                    <input type="text" id="name" class="mobile-input" required placeholder="VD: CayVang">
+                </div>
+                <div class="mobile-form-group">
+                    <label class="mobile-label">🖼️ URL ảnh</label>
+                    <input type="url" id="image" class="mobile-input" required placeholder="https://...">
+                </div>
+                <div class="mobile-form-group">
+                    <label class="mobile-label">🔗 Link SP</label>
+                    <input type="url" id="link" class="mobile-input" required placeholder="https://...">
+                </div>
+            </div>
+            <div class="quick-setup">
+                <div class="quick-section">
+                    <div class="quick-label">💰 Số tiền</div>
+                    <div class="preset-buttons" id="amountPresets"></div>
+                </div>
+                <div class="quick-section">
+                    <div class="quick-label">📋 Thủ tục</div>
+                    <div class="preset-buttons" id="procedurePresets"></div>
+                </div>
+                <div class="quick-section">
+                    <div class="quick-label">⏰ Thời hạn</div>
+                    <div class="preset-buttons" id="periodPresets"></div>
+                </div>
+                <div class="quick-section">
+                    <div class="quick-label">👤 Độ tuổi</div>
+                    <div class="preset-buttons" id="agePresets"></div>
+                </div>
+                <div class="quick-section">
+                    <div class="quick-label">🎁 Khuyến mãi</div>
+                    <div class="preset-buttons" id="promotionPresets"></div>
+                </div>
+                <div class="quick-section">
+                    <div class="quick-label">🏷️ Giảm giá</div>
+                    <div class="preset-buttons" id="discountPresets"></div>
+                </div>
+            </div>
+            <div class="selected-values">
+                <div class="value-item"><strong>💰 Số tiền:</strong> <span id="selectedAmount">--</span></div>
+                <div class="value-item"><strong>📋 Thủ tục:</strong> <span id="selectedProcedure">--</span></div>
+                <div class="value-item"><strong>⏰ Thời hạn:</strong> <span id="selectedPeriod">--</span></div>
+                <div class="value-item"><strong>👤 Độ tuổi:</strong> <span id="selectedAge">--</span></div>
+                <div class="value-item"><strong>🎁 Khuyến mãi:</strong> <span id="selectedPromotion">--</span></div>
+                <div class="value-item"><strong>🏷️ Giảm giá:</strong> <span id="selectedDiscount">--</span></div>
+            </div>
+        </form>
+        <div class="action-buttons">
+            <button class="btn btn-success" onclick="saveProduct()">💾 Lưu SP</button>
+            <button class="btn btn-secondary" onclick="resetForm()">🔄 Làm mới</button>
+            <button class="btn btn-primary" onclick="openPresetManager()">⚙️ Quản lý mẫu</button>
+        </div>
+    </div>
+    
+    <!-- Tab Quản lý -->
+    <div id="manageTab" class="admin-tab-content">
+        <div class="manage-header">
+            <div class="section-title">📦 Danh sách sản phẩm (<span id="productCount">0</span>)</div>
+            <button class="btn btn-primary btn-sm" onclick="recheckAllLinks()">🔄 Kiểm tra link</button>
+        </div>
+        <div class="product-controls">
+            <input type="text" id="productSearch" placeholder="🔍 Tìm sản phẩm..." onkeyup="filterProducts()">
+            <select id="sortProducts" onchange="sortProducts()">
+                <option value="name">Sắp xếp: Tên A-Z</option>
+                <option value="name-desc">Sắp xếp: Tên Z-A</option>
+                <option value="amount">Sắp xếp: Số tiền</option>
+            </select>
+        </div>
+        <div id="productGrid" class="admin-grid"></div>
+        <div class="empty-state" id="emptyState" style="display:none;">
+            <div class="empty-icon">📦</div>
+            <div class="empty-text">Chưa có sản phẩm nào</div>
+            <button class="btn btn-primary" onclick="document.querySelector('[data-tab=\'add\']').click()">➕ Thêm SP đầu tiên</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL QUẢN LÝ MẪU -->
+<div id="presetModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>⚙️ Quản lý mẫu nhanh</h3>
+            <button class="close" onclick="closePresetManager()">×</button>
+        </div>
+        <div class="preset-section">
+            <h4>💰 Mẫu số tiền</h4>
+            <div id="amountPresetList" class="preset-list"></div>
+            <button class="btn-sm btn-primary" onclick="addAmountPreset()">➕ Thêm mẫu</button>
+        </div>
+        <div class="preset-section">
+            <h4>📋 Mẫu thủ tục</h4>
+            <div id="procedurePresetList" class="preset-list"></div>
+            <button class="btn-sm btn-primary" onclick="addProcedurePreset()">➕ Thêm mẫu</button>
+        </div>
+        <div class="preset-section">
+            <h4>⏰ Mẫu thời hạn</h4>
+            <div id="periodPresetList" class="preset-list"></div>
+            <button class="btn-sm btn-primary" onclick="addPeriodPreset()">➕ Thêm mẫu</button>
+        </div>
+        <div class="preset-section">
+            <h4>👤 Mẫu độ tuổi</h4>
+            <div id="agePresetList" class="preset-list"></div>
+            <button class="btn-sm btn-primary" onclick="addAgePreset()">➕ Thêm mẫu</button>
+        </div>
+        <div class="preset-section">
+            <h4>🎁 Mẫu khuyến mãi</h4>
+            <div id="promotionPresetList" class="preset-list"></div>
+            <button class="btn-sm btn-primary" onclick="addPromotionPreset()">➕ Thêm mẫu</button>
+        </div>
+        <div class="preset-section">
+            <h4>🏷️ Mẫu giảm giá</h4>
+            <div id="discountPresetList" class="preset-list"></div>
+            <button class="btn-sm btn-primary" onclick="addDiscountPreset()">➕ Thêm mẫu</button>
+        </div>
+        <div class="action-buttons" style="margin-top:20px;">
+            <button class="btn btn-success" onclick="savePresets()">💾 Lưu thay đổi</button>
+            <button class="btn btn-secondary" onclick="closePresetManager()">❌ Đóng</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL ĐĂNG NHẬP -->
+<div id="loginModal" class="login-overlay">
+    <div class="login-box">
+        <h3>🔐 Đăng nhập Admin</h3>
+        <input type="password" id="adminPassword" placeholder="Nhập mật khẩu">
+        <button onclick="checkLogin()">Đăng nhập</button>
+        <div id="loginError" class="login-error">❌ Sai mật khẩu!</div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
