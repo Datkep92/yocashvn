@@ -478,28 +478,9 @@ body {
     cursor: pointer;
 }
 
-/* ========== API STATUS ========== */
-.api-status {
-    background: white;
-    border-radius: 16px;
-    padding: 16px;
-    margin-top: 20px;
-}
-
-.status-item {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    font-size: 13px;
-    padding: 4px 0;
-}
-
-.status-item span:first-child {
-    color: #6c757d;
-}
-
-.status-item span:last-child {
-    font-weight: 600;
+.btn-info {
+    background: #17a2b8;
+    color: white;
 }
 
 /* ========== ADMIN GRID ========== */
@@ -515,28 +496,6 @@ body {
 .section-title {
     font-size: 16px;
     font-weight: 700;
-}
-
-.product-controls {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-    flex-wrap: wrap;
-}
-
-.product-controls input {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 30px;
-    font-size: 14px;
-}
-
-.product-controls select {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 30px;
-    background: white;
 }
 
 .admin-grid {
@@ -561,10 +520,6 @@ body {
     position: relative;
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     border: 1px solid #eef2f5;
-}
-
-.grid-item:active {
-    transform: scale(0.98);
 }
 
 .drag-handle {
@@ -654,17 +609,6 @@ body {
     color: #721c24;
 }
 
-.status-checking {
-    background: #e2e3e5;
-    color: #383d41;
-    animation: pulse 1s infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 1; }
-}
-
 /* URL Domain Full */
 .url-domain-full {
     font-size: 9px;
@@ -676,10 +620,6 @@ body {
     border-radius: 8px;
     word-break: break-all;
     cursor: pointer;
-}
-
-.url-domain-full:active {
-    transform: scale(0.98);
 }
 
 /* Meta Tags */
@@ -764,10 +704,6 @@ body {
 
 .delete-btn {
     background: #dc3545;
-}
-
-.grid-button:active {
-    transform: scale(0.95);
 }
 
 /* Empty State */
@@ -931,7 +867,7 @@ body {
 .login-box input {
     width: 100%;
     padding: 14px;
-    margin: 15px 0;
+    margin: 10px 0;
     border: 1px solid #ddd;
     border-radius: 30px;
     font-size: 16px;
@@ -956,54 +892,277 @@ body {
     display: none;
 }
 
-.remember-checkbox {
+/* Customer Modal */
+.customer-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 10000;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    margin: 12px 0;
-    font-size: 12px;
-    color: #64748b;
 }
 
-.remember-checkbox input {
-    width: 16px;
-    height: 16px;
-    margin: 0;
-    cursor: pointer;
-}
-
-.remember-checkbox label {
-    cursor: pointer;
-    margin: 0;
-}
-
-.session-info {
-    font-size: 11px;
-    color: #94a3b8;
-    margin-top: 8px;
+.customer-modal-content {
+    background: white;
+    border-radius: 28px;
+    padding: 28px 20px;
+    width: 85%;
+    max-width: 340px;
     text-align: center;
+    animation: slideUp 0.3s ease;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
 }
 
-.session-badge {
-    background: #e2e8f0;
-    color: #1a1a2e;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 600;
-    display: inline-block;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .footer-content {
-        grid-template-columns: 1fr;
-        text-align: center;
-        gap: 20px;
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
+.customer-modal-header h3 {
+    color: #e94560;
+    font-size: 22px;
+    margin-bottom: 8px;
+}
+
+.customer-modal-header p {
+    color: #666;
+    font-size: 13px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.customer-form-group {
+    margin-bottom: 16px;
+}
+
+.customer-form-group input, .customer-form-group select {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #e0e4e8;
+    border-radius: 40px;
+    font-size: 15px;
+    text-align: center;
+    box-sizing: border-box;
+    background: white;
+}
+
+.customer-form-group input:focus, .customer-form-group select:focus {
+    outline: none;
+    border-color: #e94560;
+}
+
+.customer-submit-btn {
+    background: #e94560;
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 40px;
+    font-size: 16px;
+    font-weight: 600;
+    width: 100%;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+.customer-submit-btn:active {
+    transform: scale(0.97);
+}
+
+.customer-skip-btn {
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 8px;
+}
+
+.customer-welcome {
+    background: linear-gradient(135deg, #e94560, #ff6b8a);
+    color: white;
+    text-align: center;
+    padding: 12px 16px;
+    margin: 12px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: 0 2px 8px rgba(233,69,96,0.3);
+}
+
+/* Announcement Popup */
+.announcement-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.announcement-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    pointer-events: auto;
+}
+
+.announcement-container {
+    position: relative;
+    background: white;
+    border-radius: 28px;
+    padding: 28px 24px;
+    max-width: 340px;
+    width: 85%;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    animation: slideUp 0.3s ease;
+    pointer-events: auto;
+    z-index: 10002;
+}
+
+.announcement-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+    padding: 4px 8px;
+}
+
+.announcement-container h3 {
+    font-size: 20px;
+    margin-bottom: 12px;
+    color: #e94560;
+}
+
+.announcement-container p {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.announcement-btn {
+    display: inline-block;
+    background: #e94560;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 40px;
+    text-decoration: none;
+    font-weight: 600;
+    margin: 8px 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.announcement-dismiss {
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 13px;
+    margin-top: 12px;
+    cursor: pointer;
+    width: 100%;
+    padding: 8px;
+}
+
+/* Customer List */
+.customer-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 4px;
+}
+
+.customer-item {
+    background: #f8f9fa;
+    padding: 14px;
+    border-radius: 16px;
+    font-size: 13px;
+    border-left: 4px solid #e94560;
+    transition: all 0.2s;
+}
+
+.customer-item:hover {
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.customer-item strong {
+    color: #1a1a2e;
+    font-size: 15px;
+    display: inline-block;
+    margin-bottom: 6px;
+}
+
+.customer-badge {
+    display: inline-block;
+    background: #e94560;
+    color: white;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    margin-left: 8px;
+}
+
+/* Stat Cards */
+.stat-card {
+    background: #f0f2f5;
+    padding: 14px;
+    border-radius: 16px;
+    flex: 1;
+    text-align: center;
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.stat-card strong {
+    font-size: 20px;
+    display: block;
+    margin-top: 6px;
+    color: #e94560;
+}
+
+/* Announcement List */
+.announcement-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.announcement-history-item {
+    background: white;
+    border-radius: 16px;
+    padding: 14px;
+    margin-bottom: 12px;
+    border-left: 4px solid #e94560;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* Responsive */
 @media (max-width: 480px) {
     .admin-tab-content {
         padding: 12px;
@@ -1042,5 +1201,20 @@ body {
         white-space: normal;
         text-align: center;
         max-width: 90%;
+    }
+    
+    .customer-modal-content {
+        width: 90%;
+        padding: 24px 16px;
+    }
+    
+    .announcement-container {
+        width: 90%;
+        padding: 24px 16px;
+    }
+    
+    .customer-stats {
+        flex-direction: column;
+        gap: 8px;
     }
 }

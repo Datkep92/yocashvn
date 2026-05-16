@@ -9,25 +9,9 @@
     <meta name="keywords" content="vay tiền nhanh, vay online, vay cccd, vay không thế chấp, YoCash, vay tiền online, vay nhanh, tài chính cá nhân">
     <meta name="author" content="YoCash">
     <meta name="robots" content="index, follow">
-    <meta name="language" content="Vietnamese">
-    <meta name="revisit-after" content="1 days">
-    
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://your-domain.com/">
-    <meta property="og:title" content="YoCash - Vay Tiền Nhanh Online Chỉ Cần CCCD">
-    <meta property="og:description" content="Vay tiền nhanh online 24/7, chỉ cần CCCD, giải ngân trong 15 phút. Lãi suất 0% cho khoản vay đầu.">
-    <meta property="og:image" content="https://your-domain.com/og-image.jpg">
-    
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="YoCash - Vay Tiền Nhanh Online">
-    <meta name="twitter:description" content="Vay tiền nhanh online 24/7, chỉ cần CCCD, giải ngân trong 15 phút.">
     
     <link rel="canonical" href="https://your-domain.com/">
-    
     <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://gist.githubusercontent.com">
     
     <link rel="stylesheet" href="style.css">
     
@@ -39,23 +23,24 @@
         "description": "Dịch vụ vay tiền online nhanh chóng, chỉ cần CCCD, giải ngân trong ngày",
         "provider": {
             "@type": "Organization",
-            "name": "YoCash",
-            "url": "https://your-domain.com",
-            "logo": "https://your-domain.com/logo.png"
-        },
-        "annualPercentageRate": "0% - 20%",
-        "feesAndCommissionsSpecification": "Miễn phí hồ sơ, lãi suất ưu đãi",
-        "eligibleDuration": "3-24 tháng"
+            "name": "YoCash"
+        }
     }
     </script>
 </head>
 <body>
 
+<!-- ==================== GIAO DIỆN NGƯỜI DÙNG ==================== -->
 <div id="userView">
     <header class="user-header">
         <h1>⚡ YOCASH - Vay Tiền Nhanh Online</h1>
         <p>Chỉ cần CCCD - Giải ngân trong 15 phút - Lãi suất 0%</p>
     </header>
+    
+    <!-- Banner chào khách hàng -->
+    <div id="customerWelcome" class="customer-welcome" style="display:none;">
+        👋 Chào <span id="customerNameDisplay"></span>! Chúc bạn một ngày tốt lành
+    </div>
     
     <nav class="user-nav" aria-label="Điều hướng chính">
         <button onclick="scrollToProducts()" aria-label="Xem danh sách gói vay">📱 Xem gói vay</button>
@@ -95,45 +80,89 @@
     </footer>
 </div>
 
-<div id="adminView" class="admin-panel">
-    <div class="admin-header">
-    <h2>⚙️ ADMIN GIS - Quản lý sản phẩm</h2>
-    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-        <button class="logout-btn" style="background:#6c757d;" onclick="clearSavedPassword()" aria-label="Xóa mật khẩu">🗑️ Xóa pass</button>
-        <button class="logout-btn" onclick="logout()" aria-label="Đăng xuất">🚪 Thoát</button>
+<!-- ==================== FORM NHẬP THÔNG TIN KHÁCH HÀNG (34 TỈNH) ==================== -->
+<div id="customerFormModal" class="customer-modal" style="display:none;">
+    <div class="customer-modal-content">
+        <div class="customer-modal-header">
+            <h3>🎁 Nhận ưu đãi đặc biệt</h3>
+            <p>Để lại thông tin để được tư vấn miễn phí và nhận lãi suất ưu đãi nhất</p>
+        </div>
+        <div class="customer-form-group">
+            <input type="text" id="customerName" placeholder="Họ và tên" autocomplete="name">
+        </div>
+        <div class="customer-form-group">
+            <input type="tel" id="customerPhone" placeholder="Số điện thoại" autocomplete="tel">
+        </div>
+        <div class="customer-form-group">
+            <select id="customerProvince" style="width:100%; padding: 14px; border: 1px solid #e0e4e8; border-radius: 40px; font-size: 15px; background: white;">
+                <option value="">-- Chọn tỉnh/thành phố --</option>
+                <!-- Thành phố trực thuộc Trung ương -->
+                <option value="Hà Nội">Hà Nội</option>
+                <option value="Hồ Chí Minh">Hồ Chí Minh</option>
+                <option value="Hải Phòng">Hải Phòng</option>
+                <option value="Đà Nẵng">Đà Nẵng</option>
+                <option value="Cần Thơ">Cần Thơ</option>
+                <option value="Huế">Huế</option>
+                <!-- Các tỉnh còn lại (theo thứ tự bảng chữ cái) -->
+                <option value="An Giang">An Giang</option>
+                <option value="Bắc Ninh">Bắc Ninh</option>
+                <option value="Cà Mau">Cà Mau</option>
+                <option value="Cao Bằng">Cao Bằng</option>
+                <option value="Đắk Lắk">Đắk Lắk</option>
+                <option value="Điện Biên">Điện Biên</option>
+                <option value="Đồng Nai">Đồng Nai</option>
+                <option value="Đồng Tháp">Đồng Tháp</option>
+                <option value="Gia Lai">Gia Lai</option>
+                <option value="Hà Tĩnh">Hà Tĩnh</option>
+                <option value="Hưng Yên">Hưng Yên</option>
+                <option value="Khánh Hòa">Khánh Hòa</option>
+                <option value="Lai Châu">Lai Châu</option>
+                <option value="Lâm Đồng">Lâm Đồng</option>
+                <option value="Lạng Sơn">Lạng Sơn</option>
+                <option value="Lào Cai">Lào Cai</option>
+                <option value="Nghệ An">Nghệ An</option>
+                <option value="Ninh Bình">Ninh Bình</option>
+                <option value="Phú Thọ">Phú Thọ</option>
+                <option value="Quảng Ninh">Quảng Ninh</option>
+                <option value="Quảng Ngãi">Quảng Ngãi</option>
+                <option value="Quảng Trị">Quảng Trị</option>
+                <option value="Sơn La">Sơn La</option>
+                <option value="Tây Ninh">Tây Ninh</option>
+                <option value="Thái Nguyên">Thái Nguyên</option>
+                <option value="Thanh Hóa">Thanh Hóa</option>
+                <option value="Tuyên Quang">Tuyên Quang</option>
+                <option value="Vĩnh Long">Vĩnh Long</option>
+            </select>
+        </div>
+        <div class="customer-form-group">
+            <label style="font-size: 12px; display: flex; align-items: center; gap: 8px; justify-content: center;">
+                <input type="checkbox" id="agreePrivacy"> 
+                Tôi đồng ý nhận thông tin ưu đãi qua tin nhắn
+            </label>
+        </div>
+        <button class="customer-submit-btn" onclick="saveCustomerInfo()">✅ Nhận ưu đãi ngay</button>
+        <button class="customer-skip-btn" onclick="closeCustomerForm()">❌ Để sau</button>
     </div>
 </div>
+
+<!-- ==================== ADMIN PANEL ==================== -->
+<div id="adminView" class="admin-panel">
+    <div class="admin-header">
+        <h2>⚙️ ADMIN - Quản lý hệ thống</h2>
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <button class="logout-btn" style="background:#6c757d;" onclick="clearSavedPassword()" aria-label="Xóa mật khẩu">🗑️ Xóa pass</button>
+            <button class="logout-btn" onclick="logout()" aria-label="Đăng xuất">🚪 Thoát</button>
+        </div>
+    </div>
     
     <div class="admin-tabs" role="tablist">
-        <button class="admin-tab active" data-tab="setup" role="tab" aria-selected="true">🔧 Cài đặt</button>
-        <button class="admin-tab" data-tab="add" role="tab" aria-selected="false">➕ Thêm SP</button>
-        <button class="admin-tab" data-tab="manage" role="tab" aria-selected="false">📦 Quản lý</button>
+        <button class="admin-tab" data-tab="add" role="tab">➕ Thêm SP</button>
+        <button class="admin-tab" data-tab="manage" role="tab">📦 Quản lý</button>
+        <button class="admin-tab" data-tab="announce" role="tab">📢 Thông báo</button>
+        <button class="admin-tab" data-tab="customers" role="tab">👥 Khách hàng</button>
     </div>
     
-    <div id="setupTab" class="admin-tab-content active" role="tabpanel">
-        <div class="form-group">
-            <label for="apiUrl">🌐 API URL (Gist)</label>
-            <input type="url" id="apiUrl" placeholder="https://api.github.com/gists/...">
-        </div>
-        <div class="form-group">
-            <label for="githubToken">🔑 GitHub Token</label>
-            <input type="password" id="githubToken" placeholder="ghp_...">
-        </div>
-        <div class="form-group">
-            <label for="fileName">📁 Tên file</label>
-            <input type="text" id="fileName" value="zalocash">
-        </div>
-        <div class="action-buttons">
-            <button class="btn btn-success" onclick="saveSettings()">💾 Lưu cài đặt</button>
-            <button class="btn btn-primary" onclick="testConnection()">🔍 Kiểm tra Gist</button>
-            <button class="btn btn-warning" onclick="syncFromGist()">📥 Đồng bộ từ Gist</button>
-        </div>
-        <div class="api-status">
-            <div class="status-item"><span>📦 Tổng sản phẩm:</span><span id="totalProducts">0</span></div>
-            <div class="status-item"><span>🌐 Trạng thái Gist:</span><span id="gistStatus">❌ Chưa kết nối</span></div>
-        </div>
-    </div>
-    
+    <!-- Tab Thêm/Sửa sản phẩm -->
     <div id="addTab" class="admin-tab-content" role="tabpanel">
         <form id="productForm">
             <input type="hidden" id="editIndex" value="">
@@ -193,6 +222,7 @@
         </div>
     </div>
     
+    <!-- Tab Quản lý sản phẩm -->
     <div id="manageTab" class="admin-tab-content" role="tabpanel">
         <div class="manage-header">
             <div class="section-title">📦 Danh sách sản phẩm (<span id="productCount">0</span>)</div>
@@ -205,8 +235,95 @@
             <button class="btn btn-primary" onclick="document.querySelector('[data-tab=\'add\']').click()">➕ Thêm SP đầu tiên</button>
         </div>
     </div>
+    
+    <!-- Tab Thông báo -->
+    <div id="announceTab" class="admin-tab-content" role="tabpanel">
+        <div class="admin-announcement" style="padding: 16px; background: #fff3cd; border-radius: 16px; margin-bottom: 24px;">
+            <h3 style="margin-bottom: 12px;">📢 Tạo / Sửa thông báo nổi (Popup)</h3>
+            
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="announcementActive"> 🔔 Kích hoạt thông báo
+                </label>
+            </div>
+            
+            <div class="form-group">
+                <label>📝 Tiêu đề</label>
+                <input type="text" id="announcementTitle" placeholder="VD: 🎉 GÓI VAY MỚI" style="width:100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd;">
+            </div>
+            
+            <div class="form-group">
+                <label>💬 Nội dung</label>
+                <textarea id="announcementMessage" rows="3" style="width:100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd;" placeholder="Nhập nội dung thông báo..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>🔗 Link (tùy chọn)</label>
+                <input type="url" id="announcementLink" placeholder="https://..." style="width:100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd;">
+            </div>
+            
+            <div class="form-group">
+                <label>📝 Text trên nút link</label>
+                <input type="text" id="announcementLinkText" value="Xem chi tiết" style="width:100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd;">
+            </div>
+            
+            <div class="form-group">
+                <label>⏰ Hết hạn (ngày, tùy chọn)</label>
+                <input type="date" id="announcementExpiry" style="width:100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd;">
+            </div>
+            
+            <button class="btn btn-primary" onclick="saveAnnouncement()" style="width:100%; margin-top: 10px;">💾 Lưu thông báo</button>
+        </div>
+        
+        <div style="margin-top: 24px;">
+            <h3 style="font-size: 16px; margin-bottom: 12px;">📋 Lịch sử thông báo đã tạo</h3>
+            <div id="announcementHistoryList" class="announcement-list">
+                <div style="text-align:center;padding:20px;color:#94a3b8;">📭 Đang tải...</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tab Quản lý khách hàng -->
+    <div id="customersTab" class="admin-tab-content" role="tabpanel">
+        <div class="manage-header">
+            <div class="section-title">👥 Danh sách khách hàng (<span id="totalCustomers">0</span>)</div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button class="btn btn-success btn-sm" onclick="exportCustomersToCSV()">📥 Export CSV</button>
+                <button class="btn btn-primary btn-sm" onclick="copyPhonesToClipboard()">📋 Copy SĐT</button>
+                <button class="btn btn-info btn-sm" onclick="exportByProvince()">🗺️ Export theo tỉnh</button>
+            </div>
+        </div>
+        
+        <div class="customer-stats" style="display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;">
+            <div class="stat-card" style="background:#e8f4f8; padding: 12px; border-radius: 12px; flex:1; text-align:center;">
+                👥 Tổng khách: <strong id="statTotalCustomers">0</strong>
+            </div>
+            <div class="stat-card" style="background:#e8f8e8; padding: 12px; border-radius: 12px; flex:1; text-align:center;">
+                🆕 Hôm nay: <strong id="statNewToday">0</strong>
+            </div>
+            <div class="stat-card" style="background:#fff3e0; padding: 12px; border-radius: 12px; flex:1; text-align:center;">
+                📱 Có SĐT: <strong id="statHasPhone">0</strong>
+            </div>
+        </div>
+        
+        <!-- Bộ lọc theo tỉnh -->
+        <div style="margin-bottom: 16px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <select id="filterProvince" style="padding: 10px; border-radius: 30px; border: 1px solid #ddd; flex: 1;">
+                <option value="">-- Tất cả tỉnh/thành --</option>
+            </select>
+            <button class="btn btn-sm btn-primary" onclick="filterCustomersByProvince()">🔍 Lọc</button>
+            <button class="btn btn-sm btn-secondary" onclick="resetCustomerFilter()">🔄 Xóa lọc</button>
+        </div>
+        
+        <div id="customerList" class="customer-list"></div>
+        <div class="empty-state" id="emptyCustomerState" style="display:none; text-align:center; padding:40px;">
+            <div class="empty-icon">👥</div>
+            <div class="empty-text">Chưa có khách hàng nào đăng ký</div>
+        </div>
+    </div>
 </div>
 
+<!-- ==================== MODAL QUẢN LÝ MẪU ==================== -->
 <div id="presetModal" class="modal" role="dialog" aria-modal="true">
     <div class="modal-content">
         <div class="modal-header">
@@ -250,17 +367,21 @@
     </div>
 </div>
 
+<!-- ==================== MODAL ĐĂNG NHẬP ==================== -->
 <div id="loginModal" class="login-overlay" role="dialog" aria-modal="true">
     <div class="login-box">
         <h3>🔐 Đăng nhập Admin</h3>
-        <input type="password" id="adminPassword" placeholder="Nhập mật khẩu" aria-label="Mật khẩu admin">
-        
-        
-        
+        <input type="email" id="adminEmail" placeholder="Email admin" value="admin@yocash.vn">
+        <input type="password" id="adminPassword" placeholder="Mật khẩu">
         <button onclick="checkLogin()">Đăng nhập</button>
-        <div id="loginError" class="login-error">❌ Sai mật khẩu!</div>
+        <div id="loginError" class="login-error">❌ Sai email hoặc mật khẩu!</div>
     </div>
 </div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
 <script src="script.js"></script>
 </body>
